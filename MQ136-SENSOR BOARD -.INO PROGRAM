@@ -1,0 +1,59 @@
+#include <SPI.h>
+#include <LoRa.h>
+
+// Define the pin where the sensor is connected
+const int sensorPin = A0;
+
+// LoRa settings
+#define BAND 868E6 // Change this to your desired frequency (e.g., 433E6, 866E6)
+
+void setup() {
+  // Initialize serial communication for debugging
+  Serial.begin(9600);
+
+  // Initialize LoRa communication
+  while (!Serial);
+  if (!LoRa.begin(BAND)) {
+    Serial.println("LoRa initialization failed. Check your connections.");
+    while (true); // Hang here forever
+  }
+  Serial.println("LoRa initialization successful!");
+
+  // Set the LoRa transmit power
+  LoRa.setTxPower(20); // Set to maximum power (you can adjust this value)
+
+  // Set LoRa spreading factor (optional, default SF7)
+  // LoRa.setSpreadingFactor(7);
+}
+
+void loop() {
+  // Read the analog value from the sensor
+  int sensorValue = analogRead(sensorPin);
+
+  // Convert the analog value to voltage (optional)
+  float voltage = sensorValue * (5.0 / 1023.0);
+  Serial.print("Voltage: ");
+  Serial.println(voltage);
+
+  // Divide the sensor value by 50 to get it into single digits
+  int scaledValue = sensorValue / 50;
+  
+  // Send sensor data via LoRa
+  sendMessage(scaledValue);
+
+  // Delay before next reading and transmission
+  delay(1000);
+}
+
+void sendMessage(int sensorValue) {
+  // Construct a message
+  String message = "H2S Value: ";
+  message += sensorValue;
+
+  // Send the message via LoRa
+  LoRa.beginPacket();
+  LoRa.print(message);
+  LoRa.endPacket();
+
+  Serial.println("Message sent: " + message);
+} 
