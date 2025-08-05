@@ -1,0 +1,10 @@
+function Decoder(bytes, port) {
+  var data = bytes[0];
+  var data1 = bytes[1];
+  var No2 = data1;
+
+  return {
+    field8: data1,
+    No2: No2,
+  };
+}
