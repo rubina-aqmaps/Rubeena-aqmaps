@@ -1,0 +1,62 @@
+function calculateCOAQI(coConcentration) {
+    if (coConcentration < 0) {
+        return "Invalid concentration";
+    } else if (coConcentration <= 287) {
+        return calculateLinearAQI(coConcentration, 0, 50, 0, 287);
+    } else if (coConcentration <= 574) {
+        return calculateLinearAQI(coConcentration, 51, 100, 288, 574);
+    } else if (coConcentration <= 1148) {
+        return calculateLinearAQI(coConcentration, 101, 150, 575, 1148);
+    } else if (coConcentration <= 1722) {
+        return calculateLinearAQI(coConcentration, 151, 200, 1149, 1722);
+    } else if (coConcentration <= 2584) {
+        return calculateLinearAQI(coConcentration, 201, 300, 1724, 2584);
+    } else if (coConcentration <= 2871) {
+        return calculateLinearAQI(coConcentration, 301, 400, 2585, 2871);
+    } else if (coConcentration >= 2871) {
+        return calculateLinearAQI(coConcentration, 401, 500, 2873, 3000);
+    } else {
+        return "Beyond AQI scale";
+    }
+}
+
+function calculateLinearAQI(concentration, aqiLow, aqiHigh, concentrationLow, concentrationHigh) {
+    return Math.round(((aqiHigh - aqiLow) / (concentrationHigh - concentrationLow)) * (concentration - concentrationLow) + aqiLow);
+}
+
+function getAirQuality(aqi) {
+    if (aqi >= 0 && aqi <= 50) {
+        return "Good";
+    } else if (aqi>=51 && aqi <= 100) {
+        return "Moderate";
+    } else if (aqi>=101 && aqi <= 150) {
+        return "Unhealthy for sensitive groups";
+    } else if (aqi>=151 && aqi <= 200) {
+        return "Unhealthy";
+    } else if (aqi>=201 && aqi <= 300) {
+        return "Very Unhealthy";
+    } else if (aqi>=301 && aqi <= 500) {
+        return "Hazardous";
+    } else {
+        return "Invalid AQI";
+    }
+}
+
+function Decoder(bytes, port) {
+    // Assuming bytes represent sensor data
+    var coConcentration = (bytes[0] << 8) | bytes[1];
+
+    // Example usage:
+    coConcentration; // Change this value to the actual CO concentration in ppm
+    var coAQI = calculateCOAQI(coConcentration);
+    var airQuality = getAirQuality(coAQI);
+  
+   
+    return {
+      field7: coConcentration,
+      field: coAQI,
+        Dust_Value: coConcentration,
+        AQI_value: coAQI,
+        AQI: airQuality
+    }
+}
