@@ -1,0 +1,12 @@
+function Decoder(bytes, port) {
+  var data = (bytes[0]<< 8 | bytes[1]) ;
+  var data1 = bytes[1];
+  var Data_In_in = data + " ppm";
+
+
+  return {
+    field5: data,
+    field: data1,
+    COmq9value: Data_In_in,
+  };
+}
