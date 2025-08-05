@@ -1,0 +1,13 @@
+ function Decoder(bytes, port) {
+   var data = bytes[0];
+  var data1 = bytes[1];
+  var Temperature = data;
+  var Humidity = data1 + "%";
+
+  return {
+    field2: data,
+    field4: data1,
+    Temperature: Temperature,
+    Humidity: Humidity
+  };
+}
